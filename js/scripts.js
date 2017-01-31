@@ -22,6 +22,7 @@ TicTacToeGame.prototype.recordMove = function(row, col) {
 }
 
 TicTacToeGame.prototype.showBoard = function() {
+
   var rowColInternal, rowColExternal, rowExternal, displayBoard = [];
   for (var row = 1; row <= this.boardRows; row++) {
     rowExternal = [];
@@ -54,11 +55,22 @@ console.log(testGame.showBoard());
  // Front End Section
 /////////////////////
 
+function displayBoard(rowsCols) {
+  for (var row = 1; row <= 3; row++) {
+    for (var col = 1; col <= 3; col++) {
+      $(".row" + row + ".col" + col).text(rowsCols[row][col]);
+    }
+  }
+}
+
 $(document).ready(function() {
-  $(".square").click(function() {
-    console.log(testGame.showBoard());
-    document.getElementsByClassName(".square").innerHTML = "X";
+
+  $("#square").click(function() {
+    alert(document.getElementDd("row1 col1").innerHTML);
+    //alert(document.getElementById("#space1").innerHTML);
 
   });
+
+  displayBoard(testGame.showBoard());
 
 }); // End document ready
