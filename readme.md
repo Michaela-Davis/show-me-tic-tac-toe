@@ -49,6 +49,7 @@ Create a version of Tic-Tac-Toe that shows what it is thinking.
 ### Phase 5: Recognizes draws
 ### Phase 4: Recognizes winners
 ### Phase 3: Recognize impending opponent win (2 in a row)
+### Phase 2.8: Recognize opportunity to win (2 in a row)
 ### Phase 2.5: Following click alternates to "O"
 ### Phase 2: Display an "X" on the first click
 ### Phase 1.5 Start Backend features:
