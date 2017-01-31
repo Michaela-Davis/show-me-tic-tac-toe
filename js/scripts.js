@@ -55,9 +55,10 @@ console.log(testGame.showBoard());
 /////////////////////
 
 $(document).ready(function() {
+  $(".square").click(function() {
+    console.log(testGame.showBoard());
+    document.getElementsByClassName(".square").innerHTML = "X";
 
-  document.turn = "X";
-  $("#space1").click(function() {
   });
 
 }); // End document ready
