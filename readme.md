@@ -51,9 +51,15 @@ Create a version of Tic-Tac-Toe that shows what it is thinking.
 ### Phase 3: Recognize impending opponent win (2 in a row)
 ### Phase 2.5: Following click alternates to "O"
 ### Phase 2: Display an "X" on the first click
+### Phase 1.5 Start Backend features:
+* New ticTacToeGame()
+* showThinking()
+* recordMove()
+* showBoard()
 ### Phase 1: Build a board
 * Layout page
 * Populate page from data
+
 
 |  Behavior | Input | Output |
 | ----------|-------|--------|
