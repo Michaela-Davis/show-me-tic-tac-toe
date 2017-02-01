@@ -20,24 +20,26 @@ TicTacToeGame.prototype.refreshGame = function () {
 
 
 TicTacToeGame.prototype.lineCountSet = function (lineRowCols) {
-  var resultSet = {}, counts = [0, 0, 0], thisCell, lastBlank = [];
+  var resultSet = {}, counts = [0, 0, 0], rowCols = [[],[],[]], thisCell;
   var row, col, nextRowCol;
   for (nextRowCol = 0; nextRowCol < lineRowCols.length; nextRowCol++) {
     row = lineRowCols[nextRowCol][0];
     col = lineRowCols[nextRowCol][1];
     thisCell = this.board[row][col];
     if (typeof thisCell === "undefined") {
-      lastBlank = [row, col];
+      rowCols[2].push([row,col]);
       counts[2]++;
     } else if (thisCell % 2 === 0) {
+      rowCols[0].push([row,col]);
       counts[0]++;
     } else {
+      rowCols[1].push([row,col]);
       counts[1]++;
     }
   }
 
   resultSet.counts = counts;
-  resultSet.lastBlank = lastBlank;
+  resultSet.rowCols = rowCols;
   return resultSet;
 };
 
@@ -92,13 +94,20 @@ TicTacToeGame.prototype.lineInternalToExternal = function (linerowCols) {
 };
 
 
-TicTacToeGame.prototype.calculateWinners = function () {
-  var winners = [];
+TicTacToeGame.prototype.generateLineCountSets = function () {
   var lineCountSets = [];
   var thisGame = this;
   this.lines.forEach(function(line) {
     lineCountSets.push(thisGame.lineCountSet(line));
   });
+  return lineCountSets;
+};
+
+
+TicTacToeGame.prototype.calculateWinners = function () {
+  var winners = [];
+  var thisGame = this;
+  var lineCountSets = this.generateLineCountSets();
 
   lineCountSets.forEach(function (lineCounts, lineIndex) {
     if (lineCounts.counts[0] === 3) {
@@ -122,9 +131,34 @@ TicTacToeGame.prototype.calculateWinners = function () {
 };
 
 
+TicTacToeGame.prototype.calculateWinningMoves = function () {
+  var winningMoves = [];
+  var winningMoveCountIndex = (this.moveCount) % 2;
+  var xOrO = winningMoveCountIndex?"O":"X";
+  var lineCountSets = this.generateLineCountSets();
+  var thisGame = this;
+
+  lineCountSets.forEach(function (lineCountSet, lineIndex) {
+    if (lineCountSet.counts[winningMoveCountIndex] === 2 && lineCountSet.counts[2] === 1) {
+      winningMoves.push(
+        {
+          xOrO: xOrO,
+          lineRowCols: thisGame.lineInternalToExternal(thisGame.lines[lineIndex]),
+          blankRowCol: thisGame.lineInternalToExternal(lineCountSet.rowCols[2])[0],
+          filledRowCols: thisGame.lineInternalToExternal(lineCountSet.rowCols[winningMoveCountIndex])
+        }
+      )
+    }
+  });
+
+  return winningMoves;
+};
+
+
 TicTacToeGame.prototype.showThinking = function() {
   var result = {};
   result.winners = this.calculateWinners();
+  result.winningMoves = this.calculateWinningMoves();
   return result;
 }
 
@@ -206,6 +240,10 @@ $(document).ready(function() {
     var result = gameBoard.showThinking();
 
     showWinners(result);
+
+    // if (result.winningMoves.length) {
+      console.log(result);
+    // }
 
 
   });
