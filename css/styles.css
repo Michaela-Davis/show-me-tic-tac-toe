@@ -16,8 +16,12 @@ h2{
 }
 
 #board tr td:hover {
-  background: #e4e4e4;
+  background: lightgray;
   cursor: pointer;
+}
+
+#board tr td.isWinner:hover {
+  background: orange;
 }
 
 .image {
