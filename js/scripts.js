@@ -111,22 +111,16 @@ TicTacToeGame.prototype.calculateWinners = function () {
   var lineCountSets = this.generateLineCountSets();
 
   lineCountSets.forEach(function (lineCounts, lineIndex) {
-    if (lineCounts.counts[0] === 3) {
-      winners.push(
-        {
-          xOrO: "X",
-          lineRowCols: thisGame.lineInternalToExternal(thisGame.lines[lineIndex])
-        }
-      )
-    }
-    if (lineCounts.counts[1] === 3) {
-      winners.push(
-        {
-          xOrO: "O",
-          lineRowCols: thisGame.lineInternalToExternal(thisGame.lines[lineIndex])
-        }
-      )
-    }
+    thisGame.externalMoveSymbols.forEach(function (externalMoveSymbol, externalSymbolIndex) {
+      if (lineCounts.counts[externalSymbolIndex] === 3) {
+        winners.push(
+          {
+            xOrO: externalMoveSymbol,
+            lineRowCols: thisGame.lineInternalToExternal(thisGame.lines[lineIndex])
+          }
+        )
+      }
+    });
   });
   return winners;
 };
@@ -263,7 +257,7 @@ function showDefendingLine(result) {
 
 $(document).ready(function() {
   console.log(gameBoard.showThinking());
-  
+
   $(".square").click(function() {
     var row, col;
 
