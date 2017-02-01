@@ -38,8 +38,7 @@ TicTacToeGame.prototype.lineCountSet = function (lineRowCols) {
 
   resultSet.counts = counts;
   resultSet.lastBlank = lastBlank;
-  // return resultSet;
-  return counts;
+  return resultSet;
 };
 
 
@@ -97,26 +96,25 @@ TicTacToeGame.prototype.showThinking = function() {
   var result = {};
   var winners = [];
   var lineCountSets = [];
-  var lines = this.generateLines();
   var thisGame = this;
-  lines.forEach(function(line) {
+  this.lines.forEach(function(line) {
     lineCountSets.push(thisGame.lineCountSet(line));
   });
 
   lineCountSets.forEach(function (lineCounts, lineIndex) {
-    if (lineCounts[0] === 3) {
+    if (lineCounts.counts[0] === 3) {
       winners.push(
         {
           xOrO: "X",
-          lineRowCols: thisGame.lineInternalToExternal(lines[lineIndex])
+          lineRowCols: thisGame.lineInternalToExternal(thisGame.lines[lineIndex])
         }
       )
     }
-    if (lineCounts[1] === 3) {
+    if (lineCounts.counts[1] === 3) {
       winners.push(
         {
           xOrO: "O",
-          lineRowCols: thisGame.lineInternalToExternal(lines[lineIndex])
+          lineRowCols: thisGame.lineInternalToExternal(thisGame.lines[lineIndex])
         }
       )
     }
@@ -181,13 +179,13 @@ function showWinners(result) {
       $(".row" + rowCol[0] + ".col" + rowCol[1]).addClass("isWinner");
     });
   });
-  //
-  // if (result.winners.length) {
-  //   alert("Click OK for new game");
-  //   gameBoard.refreshGame();
-  //   displayBoard(gameBoard.showBoard());
-  //   $(".isWinner").removeClass("isWinner");
-  // }
+
+  if (result.winners.length) {
+    alert("Click OK for new game");
+    gameBoard.refreshGame();
+    displayBoard(gameBoard.showBoard());
+    $(".isWinner").removeClass("isWinner");
+  }
 }
 
 
