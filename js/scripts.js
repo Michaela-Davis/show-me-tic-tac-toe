@@ -239,6 +239,19 @@ function showWinningLine(result) {
   });
 } // end showWinningMoves
 
+function showDefendingLine(result) {
+  $(".defLine").removeClass("defLine");
+  $(".defMove").removeClass("defMove");
+  if (!result.winningMoves.length) {
+    result.defendingMoves.forEach(function(defendingMove) {
+      defendingMove.filledRowCols.forEach(function(rowCol) {
+        $(".row" + rowCol[0] + ".col" + rowCol[1]).addClass("defLine");
+      });
+      $(".row" + defendingMove.blankRowCol[0] + ".col" + defendingMove.blankRowCol[1]).addClass("defMove");
+    });
+  }
+}
+
 
 $(document).ready(function() {
 
@@ -266,11 +279,14 @@ $(document).ready(function() {
 
       showWinners(result);
       showWinningLine(result);
+      showDefendingLine(result);
 
       // Stop if someone won
       if (result.winners.length) {
         $(".potWinLine").removeClass("potWinLine");
         $(".potWinMove").removeClass("potWinMove");
+        $(".defLine").removeClass("defLine");
+        $(".defMove").removeClass("defMove");
         gameEnded = true;
       }
     }
@@ -283,6 +299,8 @@ $(document).ready(function() {
     $(".isWinner").removeClass("isWinner");
     $(".potWinLine").removeClass("potWinLine");
     $(".potWinMove").removeClass("potWinMove");
+    $(".defLine").removeClass("defLine");
+    $(".defMove").removeClass("defMove");
   });
 
 }); // End document ready
