@@ -17,12 +17,13 @@ TicTacToeGame.prototype.showThinking = function() {
 }
 
 TicTacToeGame.prototype.recordMove = function(row, col) {
-  this.board[row - 1][col - 1] = this.moveCount;
-  this.moveCount++;
+  if (typeof this.board[row - 1][col - 1] === "undefined") {
+    this.board[row - 1][col - 1] = this.moveCount;
+    this.moveCount++;
+  }
 }
 
 TicTacToeGame.prototype.showBoard = function() {
-
   var rowColInternal, rowColExternal, rowExternal, displayBoard = [];
   for (var row = 1; row <= this.boardRows; row++) {
     rowExternal = [];
@@ -45,15 +46,12 @@ TicTacToeGame.prototype.showBoard = function() {
 }
 
 
-var testGame = new TicTacToeGame();
-testGame.recordMove(1,1);
-testGame.recordMove(2,2);
-testGame.recordMove(3,3);
-console.log(testGame.showBoard());
-
   /////////////////////
  // Front End Section
 /////////////////////
+
+var gameBoard = new TicTacToeGame();
+var nextPlay = "X";
 
 function displayBoard(rowsCols) {
   for (var row = 1; row <= 3; row++) {
@@ -63,14 +61,27 @@ function displayBoard(rowsCols) {
   }
 }
 
+
 $(document).ready(function() {
 
-  $("#square").click(function() {
-    alert(document.getElementDd("row1 col1").innerHTML);
-    //alert(document.getElementById("#space1").innerHTML);
+  $(".square").click(function() {
+    var row, col;
+    for (var rowCol = 1; rowCol <= 3; rowCol++) {
+      if ($(this).hasClass("row" + rowCol)) {
+        row = rowCol;
+      }
+      if ($(this).hasClass("col" + rowCol)) {
+        col = rowCol;
+      }
+    }
+
+    gameBoard.recordMove(row, col);
+    displayBoard(gameBoard.showBoard());
+
+    // Did I win?
 
   });
 
-  displayBoard(testGame.showBoard());
+
 
 }); // End document ready
