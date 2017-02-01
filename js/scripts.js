@@ -168,6 +168,17 @@ function displayBoard(rowsCols) {
 }
 
 
+function showWinners(result) {
+  console.log(result);
+  result.winners.forEach(function(winner) {
+    winner.lineRowCols.forEach(function(rowCol) {
+      $(".row" + rowCol[0] + ".col" + rowCol[1]).addClass("isWinner");
+    });
+  });
+}
+
+
+
 $(document).ready(function() {
 
   $(".square").click(function() {
@@ -185,9 +196,9 @@ $(document).ready(function() {
     displayBoard(gameBoard.showBoard());
 
     var result = gameBoard.showThinking();
-    console.log(result);
 
-    // Did I win?
+    showWinners(result);
+
 
   });
 

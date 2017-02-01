@@ -6,7 +6,7 @@ h2{
   width: 100px;
   height: 100px;
   text-align: center;
-  font-size: 70px;
+  font-size: 50px;
 }
 
 #board {
@@ -55,4 +55,9 @@ td:nth-of-type(3) {
 
 tr:nth-of-type(3) td {
   border-bottom-color: transparent;
+}
+
+.isWinner {
+  background-color: yellow;
+  
 }
