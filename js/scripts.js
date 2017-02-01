@@ -191,16 +191,12 @@ TicTacToeGame.prototype.showBoard = function() {
   return displayBoard;
 }
 
-
-
-
-
   /////////////////////
  // Front End Section
 /////////////////////
 
 var gameBoard = new TicTacToeGame();
-var nextPlay = "X";
+var gameEnded = false;
 
 function displayBoard(rowsCols) {
   for (var row = 1; row <= 3; row++) {
@@ -217,37 +213,47 @@ function showWinners(result) {
       $(".row" + rowCol[0] + ".col" + rowCol[1]).addClass("isWinner");
     });
   });
-}
-
+} // end showWinners()
 
 
 $(document).ready(function() {
 
   $(".square").click(function() {
     var row, col;
-    for (var rowCol = 1; rowCol <= 3; rowCol++) {
-      if ($(this).hasClass("row" + rowCol)) {
-        row = rowCol;
+
+    if (!gameEnded) {
+      for (var rowCol = 1; rowCol <= 3; rowCol++) {
+        if ($(this).hasClass("row" + rowCol)) {
+          row = rowCol;
+        }
+        if ($(this).hasClass("col" + rowCol)) {
+          col = rowCol;
+        }
       }
-      if ($(this).hasClass("col" + rowCol)) {
-        col = rowCol;
+
+      gameBoard.recordMove(row, col);
+      displayBoard(gameBoard.showBoard());
+
+      var result = gameBoard.showThinking();
+
+      if (result.winningMoves.length) {
+        console.log(result);
+      }
+
+      showWinners(result);
+
+      // Stop if someone won
+      if (result.winners.length) {
+        gameEnded = true;
       }
     }
-
-    gameBoard.recordMove(row, col);
-    displayBoard(gameBoard.showBoard());
-
-    var result = gameBoard.showThinking();
-
-    showWinners(result);
-
-    // if (result.winningMoves.length) {
-      console.log(result);
-    // }
-
-
   });
 
-
+  $(".newGame").click(function() {
+    gameEnded = false;
+    gameBoard.refreshGame();
+    displayBoard(gameBoard.showBoard());
+    $(".isWinner").removeClass("isWinner");
+  });
 
 }); // End document ready
