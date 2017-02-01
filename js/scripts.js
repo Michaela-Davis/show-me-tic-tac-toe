@@ -4,13 +4,19 @@
 function TicTacToeGame() {
   this.boardRows = 3;
   this.boardCols = 3;
+  this.lines = this.generateLines();
+  this.refreshGame();
+}
+
+
+TicTacToeGame.prototype.refreshGame = function () {
   this.moveCount = 0;
   this.board = [
     [],
     [],
     []
   ]
-}
+};
 
 
 TicTacToeGame.prototype.lineCountSet = function (lineRowCols) {
@@ -175,6 +181,13 @@ function showWinners(result) {
       $(".row" + rowCol[0] + ".col" + rowCol[1]).addClass("isWinner");
     });
   });
+  //
+  // if (result.winners.length) {
+  //   alert("Click OK for new game");
+  //   gameBoard.refreshGame();
+  //   displayBoard(gameBoard.showBoard());
+  //   $(".isWinner").removeClass("isWinner");
+  // }
 }
 
 
