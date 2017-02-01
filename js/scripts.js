@@ -2,6 +2,7 @@
  // Back End Section
 ////////////////////
 function TicTacToeGame() {
+  this.externalMoveSymbols = ["X", "O"];
   this.boardRows = 3;
   this.boardCols = 3;
   this.lines = this.generateLines();
@@ -166,12 +167,18 @@ TicTacToeGame.prototype.calculateWinningMoves = function (moveCount, myWin) {
 };
 
 
+TicTacToeGame.prototype.whoseNextMove = function (moveCount) {
+  return this.externalMoveSymbols[moveCount % 2];
+};
+
+
 TicTacToeGame.prototype.showThinking = function() {
   var result = {};
   result.winners = this.calculateWinners();
   result.winningMoves = this.calculateWinningMoves(this.moveCount, true);
   result.defendingMoves = this.calculateWinningMoves(this.moveCount + 1, false);
   result.isADraw = (this.moveCount === (this.boardRows * this.boardCols) - 1 && !result.winners.length);
+  result.whoseNextMove = this.whoseNextMove(this.moveCount);
   return result;
 }
 
@@ -255,7 +262,8 @@ function showDefendingLine(result) {
 
 
 $(document).ready(function() {
-
+  console.log(gameBoard.showThinking());
+  
   $(".square").click(function() {
     var row, col;
 
@@ -274,9 +282,9 @@ $(document).ready(function() {
 
       var result = gameBoard.showThinking();
 
-      if (result.isADraw) {
+      // if (result.isADraw) {
         console.log(result);
-      }
+      // }
 
       showWinners(result);
       showWinningLine(result);
