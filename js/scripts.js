@@ -167,12 +167,15 @@ TicTacToeGame.prototype.whoseNextMove = function (moveCount) {
 
 
 TicTacToeGame.prototype.showThinking = function() {
-  var result = {};
+  var result = {}, whoseNextMove = "";
   result.winners = this.calculateWinners();
   result.winningMoves = this.calculateWinningMoves(this.moveCount, true);
   result.defendingMoves = this.calculateWinningMoves(this.moveCount + 1, false);
-  result.isADraw = (this.moveCount === (this.boardRows * this.boardCols) - 1 && !result.winners.length);
-  result.whoseNextMove = this.whoseNextMove(this.moveCount);
+  result.isADraw = (this.moveCount === (this.boardRows * this.boardCols) && !result.winners.length);
+  if (!result.isADraw && !result.winners.length) {
+    whoseNextMove = this.whoseNextMove(this.moveCount)
+  }
+  result.whoseNextMove = whoseNextMove;
   return result;
 }
 
