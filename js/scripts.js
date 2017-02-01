@@ -274,8 +274,9 @@ $(document).ready(function() {
 
       var result = gameBoard.showThinking();
 
-      if (result.isADraw) {
+      if (result.isADraw === true) {
         console.log(result);
+        $("#board").addClass("isADraw");
       }
 
       showWinners(result);
