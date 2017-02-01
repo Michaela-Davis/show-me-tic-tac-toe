@@ -171,6 +171,7 @@ TicTacToeGame.prototype.showThinking = function() {
   result.winners = this.calculateWinners();
   result.winningMoves = this.calculateWinningMoves(this.moveCount, true);
   result.defendingMoves = this.calculateWinningMoves(this.moveCount + 1, false);
+  result.isADraw = (this.moveCount === (this.boardRows * this.boardCols) - 1 && !result.winners.length);
   return result;
 }
 
@@ -273,7 +274,7 @@ $(document).ready(function() {
 
       var result = gameBoard.showThinking();
 
-      if (result.winningMoves.length || result.defendingMoves.length) {
+      if (result.isADraw) {
         console.log(result);
       }
 
