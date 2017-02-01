@@ -92,8 +92,7 @@ TicTacToeGame.prototype.lineInternalToExternal = function (linerowCols) {
 };
 
 
-TicTacToeGame.prototype.showThinking = function() {
-  var result = {};
+TicTacToeGame.prototype.calculateWinners = function () {
   var winners = [];
   var lineCountSets = [];
   var thisGame = this;
@@ -119,7 +118,13 @@ TicTacToeGame.prototype.showThinking = function() {
       )
     }
   });
-  result.winners = winners;
+  return winners;
+};
+
+
+TicTacToeGame.prototype.showThinking = function() {
+  var result = {};
+  result.winners = this.calculateWinners();
   return result;
 }
 
@@ -173,19 +178,11 @@ function displayBoard(rowsCols) {
 
 
 function showWinners(result) {
-  console.log(result);
   result.winners.forEach(function(winner) {
     winner.lineRowCols.forEach(function(rowCol) {
       $(".row" + rowCol[0] + ".col" + rowCol[1]).addClass("isWinner");
     });
   });
-
-  if (result.winners.length) {
-    alert("Click OK for new game");
-    gameBoard.refreshGame();
-    displayBoard(gameBoard.showBoard());
-    $(".isWinner").removeClass("isWinner");
-  }
 }
 
 
