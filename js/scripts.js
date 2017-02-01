@@ -219,29 +219,14 @@ function showWinners(result) {
 function showWinningLine(result) {
   $(".potWinLine").removeClass("potWinLine");
   $(".potWinMove").removeClass("potWinMove");
-  result.winningMoves.forEach(function(winningLine) {
-    winningLine.filledRowCols.forEach(function(rowCol) {
+  result.winningMoves.forEach(function(winningMove) {
+    winningMove.filledRowCols.forEach(function(rowCol) {
       $(".row" + rowCol[0] + ".col" + rowCol[1]).addClass("potWinLine");
     });
-    winningLine.lineRowCols.forEach(function(rowCol) {
-      $(".row" + rowCol[0] + ".col" + rowCol[1]).addClass("potWinMove");
-    });
-    // winningLine.blankRowCol.forEach(function(rowCol) {
-    //   $(".row" + rowCol[0] + ".col" + rowCol[1]).addClass("potWinMove");
-    // });
+    $(".row" + winningMove.blankRowCol[0] + ".col" + winningMove.blankRowCol[1]).addClass("potWinMove");
   });
 } // end showWinningMoves
 
-
-
-// function showWinningMove(result) {
-//   //$(".potWinMove").removeClass("potWinMove");
-//   result.winningMoves.forEach(function(winningMove) {
-//     winningMove.blankRowCol.forEach(function(rowCol) {
-//       $(".row" + rowCol[0] + ".col" + rowCol[1]).addClass("potWinMove");
-//     });
-//   });
-// } // end showWinningMoves
 
 $(document).ready(function() {
 
