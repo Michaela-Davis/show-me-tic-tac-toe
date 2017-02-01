@@ -208,6 +208,7 @@ function displayBoard(rowsCols) {
 
 
 function showWinners(result) {
+
   result.winners.forEach(function(winner) {
     winner.lineRowCols.forEach(function(rowCol) {
       $(".row" + rowCol[0] + ".col" + rowCol[1]).addClass("isWinner");
@@ -215,6 +216,32 @@ function showWinners(result) {
   });
 } // end showWinners()
 
+function showWinningLine(result) {
+  $(".potWinLine").removeClass("potWinLine");
+  $(".potWinMove").removeClass("potWinMove");
+  result.winningMoves.forEach(function(winningLine) {
+    winningLine.filledRowCols.forEach(function(rowCol) {
+      $(".row" + rowCol[0] + ".col" + rowCol[1]).addClass("potWinLine");
+    });
+    winningLine.lineRowCols.forEach(function(rowCol) {
+      $(".row" + rowCol[0] + ".col" + rowCol[1]).addClass("potWinMove");
+    });
+    // winningLine.blankRowCol.forEach(function(rowCol) {
+    //   $(".row" + rowCol[0] + ".col" + rowCol[1]).addClass("potWinMove");
+    // });
+  });
+} // end showWinningMoves
+
+
+
+// function showWinningMove(result) {
+//   //$(".potWinMove").removeClass("potWinMove");
+//   result.winningMoves.forEach(function(winningMove) {
+//     winningMove.blankRowCol.forEach(function(rowCol) {
+//       $(".row" + rowCol[0] + ".col" + rowCol[1]).addClass("potWinMove");
+//     });
+//   });
+// } // end showWinningMoves
 
 $(document).ready(function() {
 
@@ -241,9 +268,12 @@ $(document).ready(function() {
       }
 
       showWinners(result);
+      showWinningLine(result);
 
       // Stop if someone won
       if (result.winners.length) {
+        $(".potWinLine").removeClass("potWinLine");
+        $(".potWinMove").removeClass("potWinMove");
         gameEnded = true;
       }
     }
@@ -254,6 +284,8 @@ $(document).ready(function() {
     gameBoard.refreshGame();
     displayBoard(gameBoard.showBoard());
     $(".isWinner").removeClass("isWinner");
+    $(".potWinLine").removeClass("potWinLine");
+    $(".potWinMove").removeClass("potWinMove");
   });
 
 }); // End document ready
