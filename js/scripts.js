@@ -2,6 +2,7 @@
  // Back End Section
 ////////////////////
 function TicTacToeGame() {
+  this.externalMoveSymbols = ["X", "O"];
   this.boardRows = 3;
   this.boardCols = 3;
   this.lines = this.generateLines();
@@ -110,22 +111,16 @@ TicTacToeGame.prototype.calculateWinners = function () {
   var lineCountSets = this.generateLineCountSets();
 
   lineCountSets.forEach(function (lineCounts, lineIndex) {
-    if (lineCounts.counts[0] === 3) {
-      winners.push(
-        {
-          xOrO: "X",
-          lineRowCols: thisGame.lineInternalToExternal(thisGame.lines[lineIndex])
-        }
-      )
-    }
-    if (lineCounts.counts[1] === 3) {
-      winners.push(
-        {
-          xOrO: "O",
-          lineRowCols: thisGame.lineInternalToExternal(thisGame.lines[lineIndex])
-        }
-      )
-    }
+    thisGame.externalMoveSymbols.forEach(function (externalMoveSymbol, externalSymbolIndex) {
+      if (lineCounts.counts[externalSymbolIndex] === 3) {
+        winners.push(
+          {
+            xOrO: externalMoveSymbol,
+            lineRowCols: thisGame.lineInternalToExternal(thisGame.lines[lineIndex])
+          }
+        )
+      }
+    });
   });
   return winners;
 };
@@ -166,12 +161,21 @@ TicTacToeGame.prototype.calculateWinningMoves = function (moveCount, myWin) {
 };
 
 
+TicTacToeGame.prototype.whoseNextMove = function (moveCount) {
+  return this.externalMoveSymbols[moveCount % 2];
+};
+
+
 TicTacToeGame.prototype.showThinking = function() {
-  var result = {};
+  var result = {}, whoseNextMove = "";
   result.winners = this.calculateWinners();
   result.winningMoves = this.calculateWinningMoves(this.moveCount, true);
   result.defendingMoves = this.calculateWinningMoves(this.moveCount + 1, false);
-  result.isADraw = (this.moveCount === (this.boardRows * this.boardCols) - 1 && !result.winners.length);
+  result.isADraw = (this.moveCount === (this.boardRows * this.boardCols) && !result.winners.length);
+  if (!result.isADraw && !result.winners.length) {
+    whoseNextMove = this.whoseNextMove(this.moveCount)
+  }
+  result.whoseNextMove = whoseNextMove;
   return result;
 }
 
@@ -255,6 +259,7 @@ function showDefendingLine(result) {
 
 
 $(document).ready(function() {
+  console.log(gameBoard.showThinking());
 
   $(".square").click(function() {
     var row, col;
@@ -275,9 +280,11 @@ $(document).ready(function() {
       var result = gameBoard.showThinking();
 
       if (result.isADraw === true) {
-        console.log(result);
         $("#board").addClass("isADraw");
       }
+
+      // if (result.isADraw) {
+      console.log(result);
 
       showWinners(result);
       showWinningLine(result);
@@ -303,6 +310,7 @@ $(document).ready(function() {
     $(".potWinMove").removeClass("potWinMove");
     $(".defLine").removeClass("defLine");
     $(".defMove").removeClass("defMove");
+    $("#board").removeClass("isADraw");
   });
 
 }); // End document ready

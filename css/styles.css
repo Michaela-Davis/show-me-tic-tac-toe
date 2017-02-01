@@ -24,6 +24,11 @@ h2{
   background: orange;
 }
 
+#board.isADraw tr td:hover {
+  background-color: darkgrey;
+  cursor: pointer;
+}
+
 .image {
    position: relative;
    width: 100%;
