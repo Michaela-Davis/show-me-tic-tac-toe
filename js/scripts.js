@@ -131,12 +131,23 @@ TicTacToeGame.prototype.calculateWinners = function () {
 };
 
 
-TicTacToeGame.prototype.calculateWinningMoves = function () {
+TicTacToeGame.prototype.calculateWinningMoves = function (moveCount, myWin) {
   var winningMoves = [];
-  var winningMoveCountIndex = (this.moveCount) % 2;
-  var xOrO = winningMoveCountIndex?"O":"X";
+  var winningMoveCountIndex = moveCount % 2;
+  var whoseMove;
   var lineCountSets = this.generateLineCountSets();
   var thisGame = this;
+
+  if (myWin) {
+    whoseMove = moveCount;
+  } else {
+    whoseMove = moveCount - 1;
+  }
+  if (whoseMove % 2) {
+    xOrO = "O";
+  } else {
+    xOrO = "X";
+  }
 
   lineCountSets.forEach(function (lineCountSet, lineIndex) {
     if (lineCountSet.counts[winningMoveCountIndex] === 2 && lineCountSet.counts[2] === 1) {
@@ -158,7 +169,8 @@ TicTacToeGame.prototype.calculateWinningMoves = function () {
 TicTacToeGame.prototype.showThinking = function() {
   var result = {};
   result.winners = this.calculateWinners();
-  result.winningMoves = this.calculateWinningMoves();
+  result.winningMoves = this.calculateWinningMoves(this.moveCount, true);
+  result.defendingMoves = this.calculateWinningMoves(this.moveCount + 1, false);
   return result;
 }
 
@@ -236,7 +248,7 @@ $(document).ready(function() {
 
       var result = gameBoard.showThinking();
 
-      if (result.winningMoves.length) {
+      if (result.winningMoves.length || result.defendingMoves.length) {
         console.log(result);
       }
 
