@@ -178,28 +178,94 @@ function getRandomInt(min, max) {
 TicTacToeGame.prototype.calculateComputersMove = function (thinkingResult) {
   var moveResult = {}, thisCell, row, col;
   var computersOptionalRowCols = []; computersChoiceRowCol = [];
+  var lineCountSets;
+  var topRow = 0, middleRow = 1, bottomRow = 2, firstMove = 0, firstCell = 0, columnIndex = 1;
+  var firstMoveCol, firstMoveIsOnCorner, firstMoveIsOnEdge;
+
+  // Handle opportunities to win
   if (thinkingResult.winningMoves.length) {
     thinkingResult.winningMoves.forEach(function(winningMove) {
       computersOptionalRowCols.push(winningMove.blankRowCol);
     });
   }
 
+  // Or handle opportunities to defend
   if (!computersOptionalRowCols.length && thinkingResult.defendingMoves.length) {
     thinkingResult.defendingMoves.forEach(function(defendingMove) {
       computersOptionalRowCols.push(defendingMove.blankRowCol);
     });
   }
 
+  // If we have not decided our options yet, then we'll need more info
   if (!computersOptionalRowCols.length) {
-    row = 1;
-    col = 1
-    thisCell = this.board[row][col];
-    if (typeof thisCell === "undefined") {
-      computersOptionalRowCols.push([row, col]);
-    }
-    computersOptionalRowCols = this.lineInternalToExternal(computersOptionalRowCols);
+    lineCountSets = this.generateLineCountSets();
   }
 
+  // If computer is making the second move on the board:
+  // if first move was a corner, then choose the center
+  if (!computersOptionalRowCols.length && this.moveCount === 1) {
+    [topRow, bottomRow].forEach(function (checkCornerOnRow) {
+      firstMoveCol = undefined;
+      if (
+        lineCountSets[checkCornerOnRow].rowCols.length &&
+        lineCountSets[checkCornerOnRow].rowCols[firstMove].length &&
+        lineCountSets[checkCornerOnRow].rowCols[firstMove][firstCell].length
+      ) {
+        firstMoveCol = lineCountSets[checkCornerOnRow].rowCols[firstMove][firstCell][columnIndex];
+      }
+      if (firstMoveCol === 0 || firstMoveCol === 2) {
+        firstMoveIsOnCorner = true;
+      }
+    });
+
+    if (firstMoveIsOnCorner) {
+      computersOptionalRowCols.push([1, 1]);
+      computersOptionalRowCols = this.lineInternalToExternal(computersOptionalRowCols);
+    }
+  }
+
+  // If computer is making the second move on the board:
+  // if first move was on the edge, then choose the center or surrounding corners
+  if (!computersOptionalRowCols.length && this.moveCount === 1) {
+    var thisGame = this;
+    [topRow, bottomRow].forEach(function (checkRow) {
+      firstMoveCol = undefined;
+      if (
+        lineCountSets[checkRow].rowCols.length &&
+        lineCountSets[checkRow].rowCols[firstMove].length &&
+        lineCountSets[checkRow].rowCols[firstMove][firstCell].length
+      ) {
+        firstMoveCol = lineCountSets[checkRow].rowCols[firstMove][firstCell][columnIndex];
+      }
+      if (firstMoveCol === 1) {
+        computersOptionalRowCols.push([1, 1]);
+        computersOptionalRowCols.push([checkRow, 0]);
+        computersOptionalRowCols.push([checkRow, 2]);
+        computersOptionalRowCols = thisGame.lineInternalToExternal(computersOptionalRowCols);
+      }
+    });
+
+    // Check first move on edge on middle row
+    firstMoveCol = undefined;
+    if (
+      lineCountSets[middleRow].rowCols.length &&
+      lineCountSets[middleRow].rowCols[firstMove].length &&
+      lineCountSets[middleRow].rowCols[firstMove][firstCell].length
+    ) {
+      firstMoveCol = lineCountSets[middleRow].rowCols[firstMove][firstCell][columnIndex];
+    }
+    // For first and last column
+    [0, 2].forEach(function(checkCol){
+      if (firstMoveCol === checkCol) {
+        computersOptionalRowCols.push([1, 1]);
+        computersOptionalRowCols.push([0, checkCol]);
+        computersOptionalRowCols.push([2, checkCol]);
+        computersOptionalRowCols = thisGame.lineInternalToExternal(computersOptionalRowCols);
+      }
+    });
+  }
+
+  // Otherwise pick any free move
   if (!computersOptionalRowCols.length) {
     for (row = 0; row < this.boardRows; row++) {
       for (col = 0; col < this.boardCols; col++) {
