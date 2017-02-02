@@ -316,17 +316,42 @@ function showDefendingLine(result) {
   }
 }
 
+function showGameState() {
+  var result = gameBoard.showThinking();
+  displayBoard(gameBoard.showBoard());
+  if (result.isADraw === true) {
+    $("#board").addClass("isADraw");
+  }
+
+  showWinners(result);
+  showWinningLine(result);
+  showDefendingLine(result);
+
+  // Stop if someone won
+  if (result.winners.length) {
+    $(".potWinLine").removeClass("potWinLine");
+    $(".potWinMove").removeClass("potWinMove");
+    $(".defLine").removeClass("defLine");
+    $(".defMove").removeClass("defMove");
+    gameEnded = true;
+  }
+}
+
 
 $(document).ready(function() {
-  console.log(gameBoard.showThinking());
 
   $(".playComputer").click(function() {
-    gameBoard.startComputerPlay();
-    var result = gameBoard.showThinking();
-    var rowCol = result.computersMove.computersChoiceRowCol;
-    gameBoard.recordMove(rowCol[0], rowCol[1]);
-    displayBoard(gameBoard.showBoard());
-    var myDelete = "this line";
+    if (!gameEnded) {
+      //alert game that computer will make next move
+      gameBoard.startComputerPlay();
+      //shows user where computer is thinking about moving
+      var result = gameBoard.showThinking();
+       //Computer makes a move
+      var rowCol = result.computersMove.computersChoiceRowCol;
+      gameBoard.recordMove(rowCol[0], rowCol[1]);
+      //refresh
+      showGameState();
+    }
   });
 
   $(".square").click(function() {
@@ -343,29 +368,7 @@ $(document).ready(function() {
       }
 
       gameBoard.recordMove(row, col);
-      displayBoard(gameBoard.showBoard());
-
-      var result = gameBoard.showThinking();
-
-      if (result.isADraw === true) {
-        $("#board").addClass("isADraw");
-      }
-
-      // if (result.isADraw) {
-      console.log(result);
-
-      showWinners(result);
-      showWinningLine(result);
-      showDefendingLine(result);
-
-      // Stop if someone won
-      if (result.winners.length) {
-        $(".potWinLine").removeClass("potWinLine");
-        $(".potWinMove").removeClass("potWinMove");
-        $(".defLine").removeClass("defLine");
-        $(".defMove").removeClass("defMove");
-        gameEnded = true;
-      }
+      showGameState();
     }
   });
 
