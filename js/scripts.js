@@ -283,8 +283,8 @@ function displayBoard(rowsCols) {
 }
 
 
-function showWinners(result) {
 
+function showWinners(result) {
   result.winners.forEach(function(winner) {
     winner.lineRowCols.forEach(function(rowCol) {
       $(".row" + rowCol[0] + ".col" + rowCol[1]).addClass("isWinner");
@@ -316,6 +316,19 @@ function showDefendingLine(result) {
   }
 }
 
+function showComputerPossibleMoves(result) {
+  $(".showMove").removeClass("showMove");
+  var result = gameBoard.showThinking();
+  if (!result.winningMoves.length) {
+    result.defendingMoves.forEach(function(defendingMove){
+      $(".row" + defendingMove.blankRowCol[0] + ".col" + defendingMove.blankRowCol[1]).addClass("showMove");
+    });
+    result.winningMoves.forEach(function(winningMove) {
+      $(".row" + winningMove.blankRowCol[0] + ".col" + winningMove.blankRowCol[1]).addClass("showMove");
+    });
+  }
+} //end show computer moves
+
 function showGameState() {
   var result = gameBoard.showThinking();
   displayBoard(gameBoard.showBoard());
@@ -327,12 +340,14 @@ function showGameState() {
   showWinningLine(result);
   showDefendingLine(result);
 
+
   // Stop if someone won
   if (result.winners.length) {
     $(".potWinLine").removeClass("potWinLine");
     $(".potWinMove").removeClass("potWinMove");
     $(".defLine").removeClass("defLine");
     $(".defMove").removeClass("defMove");
+
     gameEnded = true;
   }
 }
@@ -340,17 +355,24 @@ function showGameState() {
 
 $(document).ready(function() {
 
+  console.log(gameBoard.showThinking());
   $(".playComputer").click(function() {
     if (!gameEnded) {
+      showComputerPossibleMoves();
       //alert game that computer will make next move
       gameBoard.startComputerPlay();
       //shows user where computer is thinking about moving
       var result = gameBoard.showThinking();
        //Computer makes a move
-      var rowCol = result.computersMove.computersChoiceRowCol;
-      gameBoard.recordMove(rowCol[0], rowCol[1]);
-      //refresh
-      showGameState();
+      var rowCol =  result.computersMove.computersChoiceRowCol;
+
+      var delay = 900;
+      setTimeout(function() {
+       gameBoard.recordMove(rowCol[0], rowCol[1]);
+       //refresh
+       showGameState();
+       $(".showMove").removeClass("showMove");
+      }, delay);
     }
   });
 

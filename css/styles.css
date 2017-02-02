@@ -94,3 +94,7 @@ tr:nth-of-type(3) td {
 .isADraw {
   background-color: lightgrey;
 }
+
+.showMove {
+  background-color: blue;
+}
