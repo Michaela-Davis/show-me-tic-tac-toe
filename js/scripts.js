@@ -170,16 +170,50 @@ TicTacToeGame.prototype.whoseNextMove = function (moveCount) {
 };
 
 
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+
 TicTacToeGame.prototype.calculateComputersMove = function (thinkingResult) {
-  var moveResult = {};
-  var computersOptionalRowCols = [[1,1], [2, 2], [3, 3]]; computersChoiceRowCol = [2,2];
-  // if (thinkingResult.winningMoves.length) {
-  //   thinkingResult.winningMoves.forEach(function(winningMove, winningMoveIndex) {
-  //     if (!winningMoveIndex) {
-  //       computersChoiceRowCol = [];
-  //     }
-  //   });
-  // }
+  var moveResult = {}, thisCell, row, col;
+  var computersOptionalRowCols = []; computersChoiceRowCol = [];
+  if (thinkingResult.winningMoves.length) {
+    thinkingResult.winningMoves.forEach(function(winningMove) {
+      computersOptionalRowCols.push(winningMove.blankRowCol);
+    });
+  }
+
+  if (!computersOptionalRowCols.length && thinkingResult.defendingMoves.length) {
+    thinkingResult.defendingMoves.forEach(function(defendingMove) {
+      computersOptionalRowCols.push(defendingMove.blankRowCol);
+    });
+  }
+
+  if (!computersOptionalRowCols.length) {
+    row = 1;
+    col = 1
+    thisCell = this.board[row][col];
+    if (typeof thisCell === "undefined") {
+      computersOptionalRowCols.push([row, col]);
+    }
+    computersOptionalRowCols = this.lineInternalToExternal(computersOptionalRowCols);
+  }
+
+  if (!computersOptionalRowCols.length) {
+    for (row = 0; row < this.boardRows; row++) {
+      for (col = 0; col < this.boardCols; col++) {
+        thisCell = this.board[row][col];
+        if (typeof thisCell === "undefined") {
+          computersOptionalRowCols.push([row, col]);
+        }
+      }
+    }
+    computersOptionalRowCols = this.lineInternalToExternal(computersOptionalRowCols);
+  }
+
+  computersChoiceRowCol = computersOptionalRowCols[ getRandomInt(0, computersOptionalRowCols.length - 1) ];
+
   moveResult.computersOptionalRowCols = computersOptionalRowCols;
   moveResult.computersChoiceRowCol = computersChoiceRowCol;
   return moveResult;
@@ -199,6 +233,8 @@ TicTacToeGame.prototype.showThinking = function() {
   if (!result.isADraw && !result.winners.length && result.computerMoveSymbol && this.moveCount % 2 === this.computerMoveIndex) {
     result.computersMove = this.calculateComputersMove(result);
   }
+
+
   return result;
 }
 
