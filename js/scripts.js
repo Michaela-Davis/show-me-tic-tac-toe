@@ -170,11 +170,19 @@ TicTacToeGame.prototype.whoseNextMove = function (moveCount) {
 };
 
 
-TicTacToeGame.prototype.calculateComputersMove = function () {
-  result = {};
-  result.computersOptionalRowCols = [[1,1], [2, 2], [3, 3]];
-  result.computersChoiceRowCol = [2,2];
-  return result;
+TicTacToeGame.prototype.calculateComputersMove = function (thinkingResult) {
+  var moveResult = {};
+  var computersOptionalRowCols = [[1,1], [2, 2], [3, 3]]; computersChoiceRowCol = [2,2];
+  // if (thinkingResult.winningMoves.length) {
+  //   thinkingResult.winningMoves.forEach(function(winningMove, winningMoveIndex) {
+  //     if (!winningMoveIndex) {
+  //       computersChoiceRowCol = [];
+  //     }
+  //   });
+  // }
+  moveResult.computersOptionalRowCols = computersOptionalRowCols;
+  moveResult.computersChoiceRowCol = computersChoiceRowCol;
+  return moveResult;
 };
 
 TicTacToeGame.prototype.showThinking = function() {
@@ -189,7 +197,7 @@ TicTacToeGame.prototype.showThinking = function() {
   result.whoseNextMove = whoseNextMove;
   result.computerMoveSymbol = this.computerMoveSymbol;
   if (!result.isADraw && !result.winners.length && result.computerMoveSymbol && this.moveCount % 2 === this.computerMoveIndex) {
-    result.computersMove = this.calculateComputersMove();
+    result.computersMove = this.calculateComputersMove(result);
   }
   return result;
 }
