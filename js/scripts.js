@@ -319,14 +319,10 @@ function showDefendingLine(result) {
 function showComputerPossibleMoves(result) {
   $(".showMove").removeClass("showMove");
   var result = gameBoard.showThinking();
-  if (!result.winningMoves.length) {
-    result.defendingMoves.forEach(function(defendingMove){
-      $(".row" + defendingMove.blankRowCol[0] + ".col" + defendingMove.blankRowCol[1]).addClass("showMove");
-    });
-    result.winningMoves.forEach(function(winningMove) {
-      $(".row" + winningMove.blankRowCol[0] + ".col" + winningMove.blankRowCol[1]).addClass("showMove");
-    });
-  }
+
+  result.computersMove.computersOptionalRowCols.forEach(function(computersMove) {
+    $(".row" + computersMove[0] + ".col" + computersMove[1]).addClass("showMove");
+  });
 } //end show computer moves
 
 function showGameState() {
@@ -358,15 +354,19 @@ $(document).ready(function() {
   console.log(gameBoard.showThinking());
   $(".playComputer").click(function() {
     if (!gameEnded) {
+      var delay = 400;
+      setTimeout(function() {
       showComputerPossibleMoves();
+      }, delay);
       //alert game that computer will make next move
       gameBoard.startComputerPlay();
+      console.log(gameBoard.showThinking());
       //shows user where computer is thinking about moving
       var result = gameBoard.showThinking();
        //Computer makes a move
       var rowCol =  result.computersMove.computersChoiceRowCol;
 
-      var delay = 900;
+      var delay = 1200;
       setTimeout(function() {
        gameBoard.recordMove(rowCol[0], rowCol[1]);
        //refresh
