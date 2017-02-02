@@ -24,6 +24,11 @@ h2{
   background: orange;
 }
 
+#board.isADraw tr td:hover {
+  background-color: darkgrey;
+  cursor: pointer;
+}
+
 .image {
    position: relative;
    width: 100%;
@@ -84,4 +89,8 @@ tr:nth-of-type(3) td {
 
 .defMove {
   background-color: red;
+}
+
+.isADraw {
+  background-color: darkgrey;
 }

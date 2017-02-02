@@ -284,6 +284,15 @@ function showDefendingLine(result) {
 $(document).ready(function() {
   console.log(gameBoard.showThinking());
 
+  $(".playComputer").click(function() {
+    gameBoard.startComputerPlay();
+    var result = gameBoard.showThinking();
+    var rowCol = result.computersMove.computersChoiceRowCol;
+    gameBoard.recordMove(rowCol[0], rowCol[1]);
+    displayBoard(gameBoard.showBoard());
+    var myDelete = "this line";
+  });
+
   $(".square").click(function() {
     var row, col;
 
@@ -302,9 +311,12 @@ $(document).ready(function() {
 
       var result = gameBoard.showThinking();
 
+      if (result.isADraw === true) {
+        $("#board").addClass("isADraw");
+      }
+
       // if (result.isADraw) {
-        console.log(result);
-      // }
+      console.log(result);
 
       showWinners(result);
       showWinningLine(result);
@@ -330,6 +342,7 @@ $(document).ready(function() {
     $(".potWinMove").removeClass("potWinMove");
     $(".defLine").removeClass("defLine");
     $(".defMove").removeClass("defMove");
+    $("#board").removeClass("isADraw");
   });
 
 }); // End document ready
