@@ -2,7 +2,7 @@
 
 #### Epicodus Intro Week 5 Team Project, 1/31/2017
 
-#### By David Rolfs, Jayeson Kiyabu, Michaela Davis, Benjamin T. Seaver
+#### By Jayeson Kiyabu, Michaela Davis, Benjamin T. Seaver
 
 ## Description
 
@@ -30,7 +30,7 @@ Create a version of Tic-Tac-Toe that shows what it is thinking.
 * git
 
 ## Copyright (c)
-* 2017 David Rolfs, Jayeson Kiyabu, Michaela Davis, Benjamin T. Seaver
+* 2017 Jayeson Kiyabu, Michaela Davis, Benjamin T. Seaver
 
 ## License
 * MIT
