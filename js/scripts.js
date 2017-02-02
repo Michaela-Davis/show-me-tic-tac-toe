@@ -277,7 +277,12 @@ $(document).ready(function() {
   console.log(gameBoard.showThinking());
 
   $(".playComputer").click(function() {
-    alert("computer sleeping");
+    gameBoard.startComputerPlay();
+    var result = gameBoard.showThinking();
+    var rowCol = result.computersMove.computersChoiceRowCol;
+    gameBoard.recordMove(rowCol[0], rowCol[1]);
+    displayBoard(gameBoard.showBoard());
+    var myDelete = "this line";
   });
 
   $(".square").click(function() {
