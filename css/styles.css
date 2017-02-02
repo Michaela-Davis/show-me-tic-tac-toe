@@ -25,7 +25,7 @@ h2{
 }
 
 #board.isADraw tr td:hover {
-  background-color: darkgrey;
+  background-color: lightgrey;
   cursor: pointer;
 }
 
@@ -92,5 +92,5 @@ tr:nth-of-type(3) td {
 }
 
 .isADraw {
-  background-color: darkgrey;
+  background-color: lightgrey;
 }
