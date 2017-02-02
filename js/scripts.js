@@ -178,28 +178,55 @@ function getRandomInt(min, max) {
 TicTacToeGame.prototype.calculateComputersMove = function (thinkingResult) {
   var moveResult = {}, thisCell, row, col;
   var computersOptionalRowCols = []; computersChoiceRowCol = [];
+  var lineCountSets;
+  var topRow = 0, bottomRow = 2, firstMove = 0, firstCell = 0, columnIndex = 1;
+  var firstMoveCol, firstMoveIsOnCorner
+
+  // Handle opportunities to win
   if (thinkingResult.winningMoves.length) {
     thinkingResult.winningMoves.forEach(function(winningMove) {
       computersOptionalRowCols.push(winningMove.blankRowCol);
     });
   }
 
+  // Or handle opportunities to defend
   if (!computersOptionalRowCols.length && thinkingResult.defendingMoves.length) {
     thinkingResult.defendingMoves.forEach(function(defendingMove) {
       computersOptionalRowCols.push(defendingMove.blankRowCol);
     });
   }
 
+  // If we have not decided our options yet, then we'll need more info
   if (!computersOptionalRowCols.length) {
-    row = 1;
-    col = 1
-    thisCell = this.board[row][col];
-    if (typeof thisCell === "undefined") {
-      computersOptionalRowCols.push([row, col]);
-    }
-    computersOptionalRowCols = this.lineInternalToExternal(computersOptionalRowCols);
+    lineCountSets = this.generateLineCountSets();
   }
 
+  // If computer is making the second move on the board:
+  // if first move was a corner, then choose the center
+  if (!computersOptionalRowCols.length && this.moveCount === 1) {
+    [topRow, bottomRow].forEach(function (checkCornerOnRow) {
+      firstMoveCol = undefined;
+      if (
+        lineCountSets[checkCornerOnRow].rowCols.length &&
+        lineCountSets[checkCornerOnRow].rowCols[firstMove].length &&
+        lineCountSets[checkCornerOnRow].rowCols[firstMove][firstCell].length
+      ) {
+        firstMoveCol = lineCountSets[checkCornerOnRow].rowCols[firstMove][firstCell][columnIndex];
+      }
+      if (firstMoveCol === 0 || firstMoveCol === 2) {
+        firstMoveIsOnCorner = true;
+      }
+    });
+
+    if (firstMoveIsOnCorner) {
+      row = 1;
+      col = 1
+      computersOptionalRowCols.push([row, col]);
+      computersOptionalRowCols = this.lineInternalToExternal(computersOptionalRowCols);
+    }
+  }
+
+  // Otherwise pick any free move
   if (!computersOptionalRowCols.length) {
     for (row = 0; row < this.boardRows; row++) {
       for (col = 0; col < this.boardCols; col++) {
