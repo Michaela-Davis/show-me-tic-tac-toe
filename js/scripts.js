@@ -179,8 +179,8 @@ TicTacToeGame.prototype.calculateComputersMove = function (thinkingResult) {
   var moveResult = {}, thisCell, row, col;
   var computersOptionalRowCols = []; computersChoiceRowCol = [];
   var lineCountSets;
-  var topRow = 0, bottomRow = 2, firstMove = 0, firstCell = 0, columnIndex = 1;
-  var firstMoveCol, firstMoveIsOnCorner
+  var topRow = 0, middleRow = 1, bottomRow = 2, firstMove = 0, firstCell = 0, columnIndex = 1;
+  var firstMoveCol, firstMoveIsOnCorner, firstMoveIsOnEdge;
 
   // Handle opportunities to win
   if (thinkingResult.winningMoves.length) {
@@ -219,11 +219,50 @@ TicTacToeGame.prototype.calculateComputersMove = function (thinkingResult) {
     });
 
     if (firstMoveIsOnCorner) {
-      row = 1;
-      col = 1
-      computersOptionalRowCols.push([row, col]);
+      computersOptionalRowCols.push([1, 1]);
       computersOptionalRowCols = this.lineInternalToExternal(computersOptionalRowCols);
     }
+  }
+
+  // If computer is making the second move on the board:
+  // if first move was on the edge, then choose the center or surrounding corners
+  if (!computersOptionalRowCols.length && this.moveCount === 1) {
+    var thisGame = this;
+    [topRow, bottomRow].forEach(function (checkRow) {
+      firstMoveCol = undefined;
+      if (
+        lineCountSets[checkRow].rowCols.length &&
+        lineCountSets[checkRow].rowCols[firstMove].length &&
+        lineCountSets[checkRow].rowCols[firstMove][firstCell].length
+      ) {
+        firstMoveCol = lineCountSets[checkRow].rowCols[firstMove][firstCell][columnIndex];
+      }
+      if (firstMoveCol === 1) {
+        computersOptionalRowCols.push([1, 1]);
+        computersOptionalRowCols.push([checkRow, 0]);
+        computersOptionalRowCols.push([checkRow, 2]);
+        computersOptionalRowCols = thisGame.lineInternalToExternal(computersOptionalRowCols);
+      }
+    });
+
+    // Check first move on edge on middle row
+    firstMoveCol = undefined;
+    if (
+      lineCountSets[middleRow].rowCols.length &&
+      lineCountSets[middleRow].rowCols[firstMove].length &&
+      lineCountSets[middleRow].rowCols[firstMove][firstCell].length
+    ) {
+      firstMoveCol = lineCountSets[middleRow].rowCols[firstMove][firstCell][columnIndex];
+    }
+    // For first and last column
+    [0, 2].forEach(function(checkCol){
+      if (firstMoveCol === checkCol) {
+        computersOptionalRowCols.push([1, 1]);
+        computersOptionalRowCols.push([0, checkCol]);
+        computersOptionalRowCols.push([2, checkCol]);
+        computersOptionalRowCols = thisGame.lineInternalToExternal(computersOptionalRowCols);
+      }
+    });
   }
 
   // Otherwise pick any free move
