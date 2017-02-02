@@ -11,13 +11,17 @@ function TicTacToeGame() {
 
 
 TicTacToeGame.prototype.refreshGame = function () {
+  this.computerMoveSymbol = "";
   this.moveCount = 0;
-  this.board = [
-    [],
-    [],
-    []
-  ]
+  this.board = [[], [], []];
 };
+
+
+TicTacToeGame.prototype.startComputerPlay = function () {
+  this.computerMoveIndex = this.moveCount % 2;
+  this.computerMoveSymbol = this.externalMoveSymbols[this.computerMoveIndex];
+};
+
 
 
 TicTacToeGame.prototype.lineCountSet = function (lineRowCols) {
@@ -166,6 +170,13 @@ TicTacToeGame.prototype.whoseNextMove = function (moveCount) {
 };
 
 
+TicTacToeGame.prototype.calculateComputersMove = function () {
+  result = {};
+  result.computersOptionalRowCols = [[1,1], [2, 2], [3, 3]];
+  result.computersChoiceRowCol = [2,2];
+  return result;
+};
+
 TicTacToeGame.prototype.showThinking = function() {
   var result = {}, whoseNextMove = "";
   result.winners = this.calculateWinners();
@@ -176,6 +187,10 @@ TicTacToeGame.prototype.showThinking = function() {
     whoseNextMove = this.whoseNextMove(this.moveCount)
   }
   result.whoseNextMove = whoseNextMove;
+  result.computerMoveSymbol = this.computerMoveSymbol;
+  if (!result.isADraw && !result.winners.length && result.computerMoveSymbol && this.moveCount % 2 === this.computerMoveIndex) {
+    result.computersMove = this.calculateComputersMove();
+  }
   return result;
 }
 
