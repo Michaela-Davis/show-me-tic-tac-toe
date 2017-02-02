@@ -133,7 +133,7 @@ TicTacToeGame.prototype.calculateWinners = function () {
 TicTacToeGame.prototype.calculateWinningMoves = function (moveCount, myWin) {
   var winningMoves = [];
   var winningMoveCountIndex = moveCount % 2;
-  var whoseMove;
+  var whoseMove, xOrO;
   var lineCountSets = this.generateLineCountSets();
   var thisGame = this;
 
@@ -142,11 +142,8 @@ TicTacToeGame.prototype.calculateWinningMoves = function (moveCount, myWin) {
   } else {
     whoseMove = moveCount - 1;
   }
-  if (whoseMove % 2) {
-    xOrO = "O";
-  } else {
-    xOrO = "X";
-  }
+  xOrO = this.whoseMoveXOrO(whoseMove);
+
 
   lineCountSets.forEach(function (lineCountSet, lineIndex) {
     if (lineCountSet.counts[winningMoveCountIndex] === 2 && lineCountSet.counts[2] === 1) {
@@ -165,7 +162,7 @@ TicTacToeGame.prototype.calculateWinningMoves = function (moveCount, myWin) {
 };
 
 
-TicTacToeGame.prototype.whoseNextMove = function (moveCount) {
+TicTacToeGame.prototype.whoseMoveXOrO = function (moveCount) {
   return this.externalMoveSymbols[moveCount % 2];
 };
 
@@ -292,7 +289,7 @@ TicTacToeGame.prototype.showThinking = function() {
   result.defendingMoves = this.calculateWinningMoves(this.moveCount + 1, false);
   result.isADraw = (this.moveCount === (this.boardRows * this.boardCols) && !result.winners.length);
   if (!result.isADraw && !result.winners.length) {
-    whoseNextMove = this.whoseNextMove(this.moveCount)
+    whoseNextMove = this.whoseMoveXOrO(this.moveCount)
   }
   result.whoseNextMove = whoseNextMove;
   result.computerMoveSymbol = this.computerMoveSymbol;
@@ -300,7 +297,7 @@ TicTacToeGame.prototype.showThinking = function() {
     result.computersMove = this.calculateComputersMove(result);
   }
 
-
+  console.log(result);  // testing debugging
   return result;
 }
 
@@ -320,11 +317,7 @@ TicTacToeGame.prototype.showBoard = function() {
       if (typeof rowColInternal === "undefined") {
         rowColExternal = "";
       } else {
-        if (rowColInternal % 2 === 0) {
-          rowColExternal = "X";
-        } else {
-          rowColExternal = "O";
-        }
+        rowColExternal = this.whoseMoveXOrO(rowColInternal);
       }
       rowExternal[col] = rowColExternal;
     } // End for col
