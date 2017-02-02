@@ -261,6 +261,10 @@ function showDefendingLine(result) {
 $(document).ready(function() {
   console.log(gameBoard.showThinking());
 
+  $(".playComputer").click(function() {
+    alert("computer sleeping");
+  });
+
   $(".square").click(function() {
     var row, col;
 
